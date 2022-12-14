@@ -1,0 +1,125 @@
+Microsoft (R) Macro Assembler Version 14.33.31630.0	    11/02/22 02:41:20
+3.asm							     Page 1 - 1
+
+
+				; Part 3:   Finds the sum of a number series: 1^2 + 2^2 + 3^2 +...+ n^2
+				; Author:   Joshua Francis
+				; Date:     10/31/2022 
+
+				.586
+				.MODEL FLAT
+				INCLUDE io.h                            ; header file for input/output
+			      C ; IO.H -- header file for I/O macros (listing suppressed)
+			      C .NOLIST      ; turn off listing
+			      C .LIST        ; begin listing
+			      C 
+				.STACK 4096
+
+ 00000000			.DATA
+ 00000000 00000000		n DWORD   ?
+ 00000004 45 6E 74 65 72	prompt BYTE    "Enter the value of n", 0
+	   20 74 68 65 20
+	   76 61 6C 75 65
+	   20 6F 66 20 6E
+	   00
+ 00000019  00000028 [		string  BYTE    40 DUP (?)
+	    00
+	   ]
+ 00000041 54 68 65 20 73	resultLbl BYTE  "The sum of the number series is ", 0
+	   75 6D 20 6F 66
+	   20 74 68 65 20
+	   6E 75 6D 62 65
+	   72 20 73 65 72
+	   69 65 73 20 69
+	   73 20 00
+ 00000062  0000000B [		sum     BYTE    11 DUP (?), 0
+	    00
+	   ] 00
+
+ 00000000			.CODE
+ 00000000			_MainProc3 PROC
+				        input   prompt, string, 40      ; read ASCII characters
+				        atod    string                  ; convert to integer
+ 0000002D  A3 00000000 R	        mov     n, eax                  ; store in memory
+ 00000032  B8 00000000		        mov     eax, 0                  ; initialize eax for storing the sum
+ 00000037  B9 00000001		        mov     ecx, 1                  ; ecx stores the counter value, i.e., 1, 2, 3,...,n
+
+ 0000003C  3B 0D 00000000 R	body:   cmp     ecx, n                  ; compare the values of ecx and n
+ 00000042  7F 0A		        jg      exit                    ; exit if the value of ecx is greater than n
+ 00000044  8B D9		        mov     ebx, ecx                ; moves (copies) value of ecx to ebx for next step
+ 00000046  0F AF D9		        imul    ebx, ecx                ; multiplies the value at ecx by ebx (copy of ecx) aka ecx^2 or number^2
+ 00000049  03 C3		        add     eax, ebx                ; add the value of ebx with eax that stores the sum
+ 0000004B  41			        inc     ecx                     ; increment the value of ecx
+ 0000004C  EB EE		        jmp body
+
+ 0000004E			exit:   dtoa    sum, eax                ; convert to ASCII characters
+				        output  resultLbl, sum          ; output label and sum
+ 0000007F  B8 00000000		        mov     eax, 0                  ; exit with return code 0
+ 00000084  C3			        ret
+
+ 00000085			_MainProc3 ENDP
+				END                                     ; end of source code
+Microsoft (R) Macro Assembler Version 14.33.31630.0	    11/02/22 02:41:20
+3.asm							     Symbols 2 - 1
+
+
+
+
+Macros:
+
+                N a m e                 Type
+
+atod . . . . . . . . . . . . . .	Proc
+atow . . . . . . . . . . . . . .	Proc
+dtoa . . . . . . . . . . . . . .	Proc
+input  . . . . . . . . . . . . .	Proc
+output . . . . . . . . . . . . .	Proc
+wtoa . . . . . . . . . . . . . .	Proc
+
+
+Segments and Groups:
+
+                N a m e                 Size     Length   Align   Combine Class
+
+FLAT . . . . . . . . . . . . . .	GROUP
+STACK  . . . . . . . . . . . . .	32 Bit	 00001000 Para	  Stack	  'STACK'	 
+_DATA  . . . . . . . . . . . . .	32 Bit	 0000006E Para	  Public  'DATA'	
+_TEXT  . . . . . . . . . . . . .	32 Bit	 00000085 Para	  Public  'CODE'	
+
+
+Procedures, parameters, and locals:
+
+                N a m e                 Type     Value    Attr
+
+_MainProc3 . . . . . . . . . . .	P Near	 00000000 _TEXT	Length= 00000085 Public
+  body . . . . . . . . . . . . .	L Near	 0000003C _TEXT	
+  exit . . . . . . . . . . . . .	L Near	 0000004E _TEXT	
+
+
+Symbols:
+
+                N a m e                 Type     Value    Attr
+
+@CodeSize  . . . . . . . . . . .	Number	 00000000h   
+@DataSize  . . . . . . . . . . .	Number	 00000000h   
+@Interface . . . . . . . . . . .	Number	 00000000h   
+@Model . . . . . . . . . . . . .	Number	 00000007h   
+@code  . . . . . . . . . . . . .	Text   	 _TEXT
+@data  . . . . . . . . . . . . .	Text   	 FLAT
+@fardata?  . . . . . . . . . . .	Text   	 FLAT
+@fardata . . . . . . . . . . . .	Text   	 FLAT
+@stack . . . . . . . . . . . . .	Text   	 FLAT
+_getInput  . . . . . . . . . . .	L Near	 00000000 FLAT	External
+_showOutput  . . . . . . . . . .	L Near	 00000000 FLAT	External
+atodproc . . . . . . . . . . . .	L Near	 00000000 FLAT	External
+atowproc . . . . . . . . . . . .	L Near	 00000000 FLAT	External
+dtoaproc . . . . . . . . . . . .	L Near	 00000000 FLAT	External
+n  . . . . . . . . . . . . . . .	DWord	 00000000 _DATA	
+prompt . . . . . . . . . . . . .	Byte	 00000004 _DATA	
+resultLbl  . . . . . . . . . . .	Byte	 00000041 _DATA	
+string . . . . . . . . . . . . .	Byte	 00000019 _DATA	
+sum  . . . . . . . . . . . . . .	Byte	 00000062 _DATA	
+wtoaproc . . . . . . . . . . . .	L Near	 00000000 FLAT	External
+
+	   0 Warnings
+	   0 Errors
